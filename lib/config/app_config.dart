@@ -16,10 +16,18 @@ class AppConfig {
   }
 
   /// Base URL for API Colombia endpoints.
-  static String get apiBaseUrl =>
-      dotenv.env['API_BASE_URL'] ?? defaultBaseUrl;
+  static String get apiBaseUrl {
+    if (dotenv.isInitialized) {
+      return dotenv.env['API_BASE_URL'] ?? defaultBaseUrl;
+    }
+    return defaultBaseUrl;
+  }
 
   /// Application display name.
-  static String get appName =>
-      dotenv.env['APP_NAME'] ?? defaultAppName;
+  static String get appName {
+    if (dotenv.isInitialized) {
+      return dotenv.env['APP_NAME'] ?? defaultAppName;
+    }
+    return defaultAppName;
+  }
 }
