@@ -1,0 +1,125 @@
+================================================================================
+TALLER 1: DISTRIBUCIÓN DE APK CON FIREBASE APP DISTRIBUTION
+ELECTIVA PROFESIONAL I (MÓVILES CON FLUTTER) - UCEVA
+================================================================================
+
+ESTUDIANTE: Brahian Steven Tenorio
+DOCENTE:    Ing. Diego Fernando Durán (dduran@uceva.edu.co)
+FECHA:      Lunes, 2 de Noviembre de 2026
+ASIGNATURA: Electiva Profesional I - Programación Móvil (Flutter)
+
+--------------------------------------------------------------------------------
+1. ENLACE DEL REPOSITORIO DE CÓDIGO FUENTE (GITHUB)
+--------------------------------------------------------------------------------
+URL: https://github.com/brahiantenorio/-taller_datos_abiertos.git
+
+Ramas disponibles:
+- main:                    Código estable y release de producción.
+- dev:                     Rama de integración base.
+- feature/app_distribution: Rama de desarrollo de este taller con el flujo GitFlow.
+
+--------------------------------------------------------------------------------
+2. ENLACE PÚBLICO / INVITACIÓN DE FIREBASE APP DISTRIBUTION
+--------------------------------------------------------------------------------
+Enlace de descarga para testers (Firebase App Distribution):
+https://appdistribution.firebase.google.com/testerapps/1:621020084334:android:057771457fb1e6d98e82ef/releases
+
+(Nota: También se puede acceder aceptando la invitación enviada automáticamente al correo institucional del tester: dduran@uceva.edu.co).
+
+Grupo de Testers asignado: QA_Clase
+Tester obligatorio incluido: dduran@uceva.edu.co
+
+--------------------------------------------------------------------------------
+3. RELEASE NOTES COMPLETAS
+--------------------------------------------------------------------------------
+
+================================================================================
+RELEASE v1.0.0 (Build 1) - Versión Inicial
+================================================================================
+Fecha de Liberación: 02 de Noviembre de 2026
+Identificador de Paquete: com.brahiantenorio.taller_datos_abiertos
+Versión Semántica: 1.0.0 (versionCode: 1)
+Responsable: Brahian Steven Tenorio
+
+DESCRIPCIÓN GENERAL:
+Primera versión oficial para pruebas de calidad en Firebase App Distribution del Portal de Datos Abiertos de Colombia. La aplicación consume la API pública oficial (https://api-colombia.com/api/v1) estructurada en una arquitectura por capas (Model-View-Service) y diseño Material 3.
+
+CARACTERÍSTICAS PRINCIPALES:
+1. Módulo Departamentos:
+   - Listado completo de los 32 departamentos de Colombia.
+   - Búsqueda en tiempo real por nombre de departamento y capital.
+   - Vista detallada con superficie (km²), población estimada, número de municipios y código postal/prefijo.
+
+2. Módulo Presidentes:
+   - Cronología histórica de gobernantes colombianos.
+   - Fotografía oficial, partido político, fechas de inicio y fin de mandato.
+   - Vista de detalle con biografía completa del presidente.
+
+3. Módulo Atracciones Turísticas:
+   - Catálogo de parques nacionales, monumentos y maravillas naturales.
+   - Ubicación por municipio y departamento con coordenadas geográficas.
+   - Galería fotográfica con gestor de imágenes de respaldo ante fallos de red.
+
+4. Módulo Platos Típicos:
+   - Muestra gastronómica tradicional representativa de las regiones colombianas.
+   - Listado de ingredientes clave, descripción culinaria y departamento de origen.
+
+INFRAESTRUCTURA Y SEGURIDAD:
+- Manejo declarativo de rutas con GoRouter y soporte de parámetros dinámicos (:id).
+- Gestión de variables de entorno mediante flutter_dotenv (.env).
+- Control de estados: Loading, ErrorView con botón de reintento interactivo, y EmptyState.
+- Permisos configurados: android.permission.INTERNET y ACCESS_NETWORK_STATE.
+
+CREDENCIALES Y ACCESO:
+- La aplicación es de consumo público y libre; no requiere usuario ni contraseña para la navegación y validación de endpoints.
+
+--------------------------------------------------------------------------------
+
+================================================================================
+RELEASE v1.0.1 (Build 2) - Actualización Incremental (Update OTA)
+================================================================================
+Fecha de Liberación: 02 de Noviembre de 2026
+Identificador de Paquete: com.brahiantenorio.taller_datos_abiertos
+Versión Semántica: 1.0.1 (versionCode: 2)
+Responsable: Brahian Steven Tenorio
+
+OBJETIVO DE LA ACTUALIZACIÓN:
+Evidenciar el ciclo completo de entrega incremental mediante Firebase App Distribution, garantizando la actualización fluida y segura en dispositivos físicos de los evaluadores.
+
+CAMBIOS Y MEJORAS IMPLEMENTADAS:
+1. Indicadores Visuales de Versión (UI/UX):
+   - Se añadió un badge dinámico en la cabecera principal (Hero Header) del Dashboard con el texto:
+     "v1.0.1 (Build 2) • Firebase Distribution" con ícono de verificación.
+   - Se integró una tarjeta informativa en el pie de página (Footer) que confirma el release activo:
+     "Release v1.0.1+2 | QA_Clase Tester Build", permitiendo al tester y evaluador constatar la actualización a simple vista.
+
+2. Fortalecimiento de Conectividad en Android:
+   - Configuración estricta en AndroidManifest.xml de los permisos android.permission.INTERNET y android.permission.ACCESS_NETWORK_STATE para builds firmados de release.
+   - Prevención de bloqueos por falta de conectividad en dispositivos físicos con Android 13 y 14.
+
+3. Optimización y Refactorización de Widgets:
+   - Sustitución de directivas deprecated (withOpacity -> valores hexadecimales alfa compatibles).
+   - Ajuste de jerarquías de widgets const para optimizar el árbol de renderizado en dispositivos de gama media y baja.
+
+4. Suite de Pruebas:
+   - 10/10 pruebas unitarias y de widgets aprobadas satisfactoriamente (flutter test).
+   - 0 errores y 0 warnings en análisis estático (flutter analyze).
+
+INSTRUCCIONES PARA EL TESTER AL ACTUALIZAR:
+1. Abrir la notificación o correo recibido de Firebase App Distribution, o abrir la aplicación "App Tester" de Firebase en el dispositivo móvil.
+2. Pulsar sobre la nueva versión 1.0.1 (2).
+3. Seleccionar "Descargar / Actualizar". El sistema Android preservará la configuración de la app y actualizará el binario sin pérdida de datos.
+4. Al abrir la app, verificar los distintivos v1.0.1+2 en el Dashboard.
+
+--------------------------------------------------------------------------------
+4. RESUMEN DE LA BITÁCORA DE QA
+--------------------------------------------------------------------------------
+- Incidencia 1: Falta de etiqueta <uses-permission android:name="android.permission.INTERNET"/> en release de AndroidManifest.xml (en debug Flutter lo inyecta por defecto pero en release bloqueaba peticiones HTTP).
+  Solución: Inclusión explícita en android/app/src/main/AndroidManifest.xml. Estado: RESUELTA.
+
+- Incidencia 2: Inconsistencia de versionado entre pubspec.yaml y Gradle.
+  Solución: Sincronización mediante la directiva version: 1.0.1+2 en pubspec.yaml y lectura dinámica de flutter.versionCode y flutter.versionName en build.gradle.kts. Estado: RESUELTA.
+
+- Incidencia 3: Firma requerida para despliegue en testers sin Google Play.
+  Solución: Configuración de signingConfig para release apuntando a debug keys en app/build.gradle.kts, permitiendo instalación universal inmediata en cualquier dispositivo Android. Estado: RESUELTA.
+================================================================================
