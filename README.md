@@ -249,6 +249,115 @@ Siguiendo las pautas de control de versiones:
 
 ---
 
+---
+
+## 🚀 Distribución de APK con Firebase App Distribution
+
+### 📌 Flujo de Publicación y Distribución
+El proceso de distribución implementado sigue el flujo estandarizado de entrega continua para pruebas de calidad en dispositivos reales:
+$$\text{Generar APK Release} \longrightarrow \text{Firebase App Distribution} \longrightarrow \text{Gestión de Testers} \longrightarrow \text{Instalación en Físico} \longrightarrow \text{Actualización Incremental (OTA)}$$
+
+1. **Generación del APK Release:**
+   - Compilación limpia del binario con `flutter build apk --release`.
+   - Inclusión obligatoria de permisos de red en `android/app/src/main/AndroidManifest.xml`:
+     - `<uses-permission android:name="android.permission.INTERNET"/>`
+     - `<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>`
+   - Firma universal configurada en `android/app/build.gradle.kts` asociando `signingConfig = signingConfigs.getByName("debug")` para que cualquier tester pueda instalar el paquete sin requerir firma de Google Play Store.
+
+2. **Carga en Firebase Console:**
+   - Acceso al proyecto de Firebase vinculado con el `applicationId`: `com.brahiantenorio.taller_datos_abiertos`.
+   - Navegación al módulo **Release & Monitor → App Distribution**.
+   - Subida manual o automatizada del binario `app-release.apk`.
+
+3. **Asignación y Notificación a Testers:**
+   - Creación del grupo de pruebas **`QA_Clase`**.
+   - Incorporación del correo institucional del evaluador: **`dduran@uceva.edu.co`** y desarrolladores del equipo.
+   - Envío automático de notificaciones por correo electrónico con enlace directo de descarga e instrucciones de acceso a **Firebase App Tester**.
+
+4. **Instalación y Pruebas en Hardware Real:**
+   - Descarga e instalación del APK en smartphones Android físicos.
+   - Ejecución de los 4 módulos funcionales comprobando consumo real de API Colombia bajo diferentes tipos de red (Wi-Fi y datos móviles).
+
+5. **Distribución de Actualización Incremental:**
+   - Incremento de versión en `pubspec.yaml` (`1.0.0+1` → `1.0.1+2`).
+   - Incorporación de elementos visuales en el Dashboard para validación inmediata de la actualización.
+   - Nueva compilación y despliegue a través del grupo `QA_Clase`.
+
+---
+
+### 📦 Guía de Publicación y Replicación del Proceso
+
+Para que cualquier miembro del equipo de desarrollo replique la distribución de una nueva versión:
+
+```bash
+# 1. Incrementar el número de versión y código de build en pubspec.yaml
+# Ejemplo: version: 1.0.2+3
+
+# 2. Validar calidad de código y suite de pruebas
+flutter analyze
+flutter test
+
+# 3. Compilar el APK de producción
+flutter build apk --release
+
+# 4. El archivo generado se ubicará en:
+# build/app/outputs/flutter-apk/app-release.apk
+
+# 5. En Firebase Console (App Distribution):
+# - Arrastrar el archivo app-release.apk a la pestaña "Releases"
+# - Pegar las Release Notes con el formato estandarizado
+# - Seleccionar el grupo "QA_Clase"
+# - Hacer clic en "Distribuir a 1 grupo"
+```
+
+---
+
+### 🏷️ Estrategia de Versionado y Release Notes
+
+Se utiliza **Versionamiento Semántico (SemVer)** adaptado a Flutter y Android:
+
+| Componente | Formato Flutter (`pubspec.yaml`) | Mapeo Android (`build.gradle.kts`) | Propósito |
+| :--- | :--- | :--- | :--- |
+| **Versión Base** | `version: 1.0.0+1` | `versionName: "1.0.0"`, `versionCode: 1` | Primer release funcional con todos los módulos de API Colombia. |
+| **Actualización** | `version: 1.0.1+2` | `versionName: "1.0.1"`, `versionCode: 2` | Release con badges visuales de QA, permisos de red explícitos y optimizaciones. |
+
+#### Formato Estandarizado de Release Notes:
+```text
+[VERSIÓN] - AAAA-MM-DD
+Novedades:
+- Descripción puntual de características nuevas.
+Mejoras Técnicas:
+- Permisos, dependencias y optimizaciones de rendimiento.
+Instrucciones para el Tester:
+- Notas de instalación, credenciales (si aplica) y puntos focales de prueba.
+```
+
+---
+
+### 📋 Bitácora de QA (Aseguramiento de Calidad)
+
+| Versión | Fecha | Cambios Principales | Incidencias Encontradas | Solución Aplicada | Estado |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **v1.0.0 (1)** | 02/11/2026 | Release inicial con 4 módulos y navegación GoRouter. | Falta de permiso `INTERNET` en release (en debug Flutter lo inyecta por defecto). | Se agregaron los permisos explícitos en `AndroidManifest.xml`. | **Resuelto** |
+| **v1.0.0 (1)** | 02/11/2026 | Verificación de instalación en dispositivos reales. | Bloqueo por APK no firmado en release para distribución externa. | Se configuró `signingConfig = signingConfigs.getByName("debug")` en `build.gradle.kts`. | **Resuelto** |
+| **v1.0.1 (2)** | 02/11/2026 | Despliegue de actualización incremental OTA. | Dificultad para que el evaluador identifique visualmente el nuevo build. | Se añadió un badge con icono de verificación en el Hero Header y un pie de página en Dashboard. | **Resuelto** |
+| **v1.0.1 (2)** | 02/11/2026 | Limpieza de código y análisis estático. | Advertencias de linter por `withOpacity` en Flutter 3.47+. | Se migraron a valores de color hexadecimales alfa compatibles (`Color(0x26FFFFFF)`). | **Resuelto** |
+
+---
+
+### 📸 Evidencias de Distribución y Entregables
+
+- **Informe Técnico Completo en PDF:** [Informe_Firebase_App_Distribution_Brahian_Tenorio.pdf](./Informe_Firebase_App_Distribution_Brahian_Tenorio.pdf)
+- **Archivo de Enlaces y Release Notes (.txt):** [entregables/entrega_app_distribution.txt](./entregables/entrega_app_distribution.txt)
+- **Capturas de Pantalla del Panel y Dispositivo:** Carpeta [`docs/distribution_evidence/`](./docs/distribution_evidence/)
+  - `01_app_distribution_releases.png`: Panel de Releases con versiones 1.0.0 y 1.0.1 visibles.
+  - `02_testers_group.png`: Grupo de testers `QA_Clase` con `dduran@uceva.edu.co` incluido.
+  - `03_invitation_email.png`: Notificación por correo recibida por el tester.
+  - `04_app_installed_device.png`: App instalada y ejecutándose en dispositivo Android físico.
+  - `05_update_evidence.png`: Evidencia de actualización incremental comparativa (antes vs después).
+
+---
+
 **Autor:** Brahian Andres Tenorio  
 **Materia:** Móviles con Flutter — Electiva Profesional I  
 **Institución:** Universidad  
